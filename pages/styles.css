@@ -41,14 +41,6 @@ img {
   border: 1px solid;
 }
 
-/* input {
-  height: 30px;
-  width: 300px;
-  bottom: 10px;
-  border-radius: 25px;
-  font-size: large;
-  right: 0.2px;
-  top: 0.2px;
-  outline: none;
-  border: 1px solid;
-} */
+.hide {
+  display: none;
+}

@@ -4,8 +4,6 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 
 const provideNewResponse = function(req, content, type) {
   const res = new Response();
-  if (!req.headers['Cookie'])
-    res.setHeader('Set-Cookie', `sessionId=${new Date().getTime()}`);
   res.setHeader('Content-Type', CONTENT_TYPES[type]);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 200;
@@ -13,24 +11,46 @@ const provideNewResponse = function(req, content, type) {
   return res;
 };
 
-const serveHomePage = req => {
-  let path = `${__dirname}/pages${req.url}`;
-  if (path.includes('sources')) path = `${__dirname}${req.url}`;
-  if (req.url == '/favicon.ico') {
-    const res = new Response();
-    res.statusCode = 200;
-    res.body = '';
-    return res;
-  }
-  let content = fs.readFileSync(path);
-  if (path.includes('guestBook.html')) {
-    content = fs.readFileSync(path, 'utf8');
-    const allComment = JSON.parse(fs.readFileSync('./inputs.json')).reverse();
-    const fileDivision = allComment.reduce(getCommentDivisions, '');
-    content = content.replace(/___comments___/g, fileDivision);
-  }
+const provideCommentPage = function(path) {
+  let content = fs.readFileSync(path, 'utf8');
+  const allComment = JSON.parse(fs.readFileSync('./inputs.json'));
+  const fileDivision = allComment.reduce(getCommentDivisions, '');
+  content = content.replace(/___comments___/g, fileDivision);
+  return content;
+};
+
+const faviconResponse = function() {
+  const res = new Response();
+  res.statusCode = 200;
+  res.body = '';
+  return res;
+};
+
+const serveStaticPage = function(path, req) {
+  const content = fs.readFileSync(path);
   const [, type] = req.url.split('.');
   return provideNewResponse(req, content, type);
+};
+
+const serveGuestPage = function(path, req) {
+  const content = provideCommentPage(path);
+  const [, type] = req.url.split('.');
+  return provideNewResponse(req, content, type);
+};
+
+const servePages = function(req) {
+  let path = `${__dirname}/pages${req.url}`;
+  if (path.includes('sources')) {
+    path = `${__dirname}${req.url}`;
+  }
+  let responseProvider = serveStaticPage;
+  if (req.url === '/favicon.ico') {
+    responseProvider = faviconResponse;
+  }
+  if (path.includes('guestBook.html')) {
+    responseProvider = serveGuestPage;
+  }
+  return responseProvider(path, req);
 };
 
 const getCommentDivisions = function(content, reaction) {
@@ -46,23 +66,24 @@ const getCommentDivisions = function(content, reaction) {
 
 const storeInputs = function(body) {
   const contents = JSON.parse(fs.readFileSync('./inputs.json'));
-  contents.push(body);
+  contents.unshift(body);
   fs.writeFileSync('./inputs.json', JSON.stringify(contents), 'utf8');
+};
+
+const parseRequestBody = function(req) {
+  req.body.comment = req.body.comment.replace(/\+/g, ' ');
+  req.body.date = new Date().toJSON();
+  storeInputs(req.body);
 };
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') {
     req.url = '/home.html';
-    return serveHomePage;
   }
-  if (req.method === 'GET') return serveHomePage;
   if (req.method === 'POST') {
-    req.body.comment = req.body.comment.replace(/\+/g, ' ');
-    req.body.date = new Date().toJSON();
-    storeInputs(req.body);
-    return serveHomePage;
+    parseRequestBody(req);
   }
-  return () => new Response();
+  return servePages;
 };
 
 const processRequest = req => {

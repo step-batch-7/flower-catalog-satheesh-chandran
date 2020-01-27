@@ -57,9 +57,10 @@ const getCommentDivisions = function(content, reaction) {
   return (
     content +
     `<tr>
-          <td>${reaction.date}</td>
-          <td>${reaction.name}</td>
-          <td>${reaction.comment}</td>
+          <td> ${reaction.date} </td>
+          <td> ${reaction.time} </td>
+          <td> ${reaction.name} </td>
+          <td> ${reaction.comment} </td>
         </tr>`
   );
 };
@@ -75,18 +76,19 @@ const parseRequestBody = function(req) {
   req.body.comment = decodeURIComponent(req.body.comment);
   req.body.name = req.body.name.replace(/\+/g, ' ');
   req.body.name = decodeURIComponent(req.body.name);
-  req.body.date = new Date().toJSON();
+  const now = new Date();
+  const [date, time] = now.toLocaleString().split(',');
+  req.body.date = date;
+  req.body.time = time;
   storeInputs(req.body);
 };
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') {
     req.url = '/home.html';
-    return servePages;
   }
   if (req.method === 'POST') {
     parseRequestBody(req);
-    return servePages;
   }
   return servePages;
 };

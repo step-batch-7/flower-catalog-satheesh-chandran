@@ -11,9 +11,27 @@ const provideNewResponse = function(content, type) {
   return res;
 };
 
+const getCommentDivisions = function(content, reaction) {
+  const [date, time] = new Date(reaction.date).toLocaleString().split(',');
+  return (
+    content +
+    `<tr>
+          <td> ${date} </td>
+          <td> ${time} </td>
+          <td> ${reaction.name} </td>
+          <td> ${reaction.comment} </td>
+        </tr>`
+  );
+};
+
 const provideCommentPage = function(path) {
   let content = fs.readFileSync(path, 'utf8');
-  const allComment = JSON.parse(fs.readFileSync('./inputs.json'));
+  let allComment;
+  if (fs.existsSync('./comments.json')) {
+    allComment = JSON.parse(fs.readFileSync('./comments.json'));
+  } else {
+    allComment = [];
+  }
   const fileDivision = allComment.reduce(getCommentDivisions, '');
   content = content.replace(/___comments___/g, fileDivision);
   return content;
@@ -53,22 +71,15 @@ const servePages = function(req) {
   return responseProvider(path, req);
 };
 
-const getCommentDivisions = function(content, reaction) {
-  return (
-    content +
-    `<tr>
-          <td> ${reaction.date} </td>
-          <td> ${reaction.time} </td>
-          <td> ${reaction.name} </td>
-          <td> ${reaction.comment} </td>
-        </tr>`
-  );
-};
-
 const storeInputs = function(body) {
-  const contents = JSON.parse(fs.readFileSync('./inputs.json'));
-  contents.unshift(body);
-  fs.writeFileSync('./inputs.json', JSON.stringify(contents), 'utf8');
+  let comments;
+  if (fs.existsSync('./comments.json')) {
+    comments = JSON.parse(fs.readFileSync('./comments.json'));
+  } else {
+    comments = [];
+  }
+  comments.unshift(body);
+  fs.writeFileSync('./comments.json', JSON.stringify(comments), 'utf8');
 };
 
 const parseRequestBody = function(req) {
@@ -77,9 +88,7 @@ const parseRequestBody = function(req) {
   req.body.name = req.body.name.replace(/\+/g, ' ');
   req.body.name = decodeURIComponent(req.body.name);
   const now = new Date();
-  const [date, time] = now.toLocaleString().split(',');
-  req.body.date = date;
-  req.body.time = time;
+  req.body.date = now;
   storeInputs(req.body);
 };
 

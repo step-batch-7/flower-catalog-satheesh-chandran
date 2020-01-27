@@ -1,3 +1,4 @@
 make the source content available
 get ready the different pages as it should look like (static pages)
 identifying the responsible tasks for jar hiding and downloading
+add time out function to hide the jar picture

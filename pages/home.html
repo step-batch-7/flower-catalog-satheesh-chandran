@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="./styles.css" />
     <script>
       const hideImage = function() {
-        document.getElementById('imageBar').classList.add('hide');
+        document.getElementById('imageBar').style.visibility = 'hidden';
         setTimeout(() => {
-          document.getElementById('imageBar').classList.remove('hide');
+          document.getElementById('imageBar').style.visibility = 'visible';
         }, 1000);
       };
     </script>
@@ -33,7 +33,7 @@
             <a href="./ageratum.html">Ageratum</a>
           </li>
         </div>
-        <div id="imageBar">
+        <div id="imageBar" style="height: 100px;width:100px">
           <img
             src="../sources/animated-flower-image-0021.gif"
             style="height: 100px; width:100px;"

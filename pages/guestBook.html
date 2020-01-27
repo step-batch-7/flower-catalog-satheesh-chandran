@@ -7,34 +7,17 @@
   <body>
     <h1><a href="./home.html"><<</a> Guest Book</h1>
     <h2 class="guestTitle">Leave A Message</h2>
-    <form action="guestBook.html" method="POST" id="form">
-      Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+    <form action="guestBook.html" method="POST">
+      Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
         type="text"
         class="name"
         placeholder=" Name"
         name="name"
         autofocus
       />
-      <br />
-      <br />
-      Comment:
-      <input
-        type="text"
-        class="comment"
-        placeholder=" Comment"
-        name="comment"
-      />
-      <!-- Comment:
-    <textarea
-      name="Comment:"
-      cols="30"
-      rows="10"
-      placeholder=" Comments"
-      form="form"
-    ></textarea> -->
-      <br />
-      <br />
-      <input type="submit" value="submit" form="form" />
+      <br><br>
+      Comment:<textarea name="comment" class="comment"></textarea><br /><br>
+      <input type="submit" value="submit" />
     </form>
     <hr size="2px" color="1px solid red" />
     <div id="commentBar">

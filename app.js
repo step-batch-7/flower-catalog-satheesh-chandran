@@ -2,7 +2,7 @@ const fs = require('fs');
 const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 
-const provideNewResponse = function(req, content, type) {
+const provideNewResponse = function(content, type) {
   const res = new Response();
   res.setHeader('Content-Type', CONTENT_TYPES[type]);
   res.setHeader('Content-Length', content.length);
@@ -29,13 +29,13 @@ const faviconResponse = function() {
 const serveStaticPage = function(path, req) {
   const content = fs.readFileSync(path);
   const [, type] = req.url.split('.');
-  return provideNewResponse(req, content, type);
+  return provideNewResponse(content, type);
 };
 
 const serveGuestPage = function(path, req) {
   const content = provideCommentPage(path);
   const [, type] = req.url.split('.');
-  return provideNewResponse(req, content, type);
+  return provideNewResponse(content, type);
 };
 
 const servePages = function(req) {
@@ -72,6 +72,9 @@ const storeInputs = function(body) {
 
 const parseRequestBody = function(req) {
   req.body.comment = req.body.comment.replace(/\+/g, ' ');
+  req.body.comment = decodeURIComponent(req.body.comment);
+  req.body.name = req.body.name.replace(/\+/g, ' ');
+  req.body.name = decodeURIComponent(req.body.name);
   req.body.date = new Date().toJSON();
   storeInputs(req.body);
 };
@@ -79,9 +82,11 @@ const parseRequestBody = function(req) {
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') {
     req.url = '/home.html';
+    return servePages;
   }
   if (req.method === 'POST') {
     parseRequestBody(req);
+    return servePages;
   }
   return servePages;
 };

@@ -1,5 +1,9 @@
 const http = require('http');
-const { serveGuestPage, serveStaticPage } = require('./handlers');
+const {
+  serveGuestPage,
+  serveStaticPage,
+  servePreviousGuestBook
+} = require('./handlers');
 
 const port = 8000;
 
@@ -18,6 +22,9 @@ const requestListener = function(req, res) {
   const path = setPath(req);
   if (req.method === 'POST') {
     return serveGuestPage(path, req, res);
+  }
+  if (req.method === 'GET' && path.includes('guestBook.html')) {
+    return servePreviousGuestBook(path, req, res);
   }
   serveStaticPage(path, req, res);
 };

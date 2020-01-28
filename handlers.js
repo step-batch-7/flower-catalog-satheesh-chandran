@@ -37,6 +37,10 @@ const provideCommentPage = function(path) {
 const serveStaticPage = function(path, req, res) {
   const content = fs.readFileSync(path);
   const [, type] = path.split('.');
+  responseWriting(content, type, res);
+};
+
+const responseWriting = function(content, type, res) {
   res.setHeader('Content-Type', CONTENT_TYPES[type]);
   res.setHeader('Content-Length', content.length);
   res.end(content);
@@ -44,18 +48,21 @@ const serveStaticPage = function(path, req, res) {
 
 const serveGuestPage = function(path, req, res) {
   const [, type] = req.url.split('.');
-  let data;
   req.setEncoding('utf8');
   req.on('data', chunk => {
-    data = parseChunk(chunk);
+    const data = parseChunk(chunk);
     storeInputs(data);
   });
   req.on('end', () => {
     const content = provideCommentPage(path);
-    res.setHeader('Content-Type', CONTENT_TYPES[type]);
-    res.setHeader('Content-Length', content.length);
-    res.end(content);
+    responseWriting(content, type, res);
   });
+};
+
+const servePreviousGuestBook = function(path, req, res) {
+  const [, type] = req.url.split('.');
+  const content = provideCommentPage(path);
+  responseWriting(content, type, res);
 };
 
 const storeInputs = function(body) {
@@ -79,4 +86,4 @@ const parseChunk = function(chunk) {
   return data;
 };
 
-module.exports = { serveGuestPage, serveStaticPage };
+module.exports = { serveGuestPage, serveStaticPage, servePreviousGuestBook };

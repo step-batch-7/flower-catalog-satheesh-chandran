@@ -24,14 +24,21 @@ const getCommentDivisions = function(content, reaction) {
   );
 };
 
+const getJSONContent = function() {
+  if (!fs.existsSync('./comments.json')) {
+    return [];
+  }
+  let comments = fs.readFileSync('./comments.json', 'utf8');
+  if (comments === '') {
+    return [];
+  }
+  comments = JSON.parse(comments);
+  return comments;
+};
+
 const provideCommentPage = function(path) {
   let content = fs.readFileSync(path, 'utf8');
-  let allComment;
-  if (fs.existsSync('./comments.json')) {
-    allComment = JSON.parse(fs.readFileSync('./comments.json'));
-  } else {
-    allComment = [];
-  }
+  const allComment = getJSONContent();
   const fileDivision = allComment.reduce(getCommentDivisions, '');
   content = content.replace(/___comments___/g, fileDivision);
   return content;
@@ -72,12 +79,7 @@ const servePages = function(req) {
 };
 
 const storeInputs = function(body) {
-  let comments;
-  if (fs.existsSync('./comments.json')) {
-    comments = JSON.parse(fs.readFileSync('./comments.json'));
-  } else {
-    comments = [];
-  }
+  const comments = getJSONContent();
   comments.unshift(body);
   fs.writeFileSync('./comments.json', JSON.stringify(comments), 'utf8');
 };

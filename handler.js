@@ -116,8 +116,11 @@ const serveComments = function(req, res) {
 };
 
 const notFound = function(req, res) {
-  res.writeHead(statusCodes.notFound);
-  res.end('Not Found');
+  const type = 'html';
+  const content = fs.readFileSync(
+    '/Users/step13/html/flower-catalog-satheesh-chandran/pages/notFound.html'
+  );
+  responseWriting(content, type, res);
 };
 
 const app = new App();

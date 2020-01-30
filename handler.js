@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { App } = require('./appClass');
 const CONTENT_TYPES = require('./lib/mimeTypes');
-const notFoundCode = 404;
+const statusCodes = { notFound: 404, redirect: 301 };
 
 const setPath = function(req) {
   let path = `${__dirname}/pages${req.url}`;
@@ -64,20 +64,7 @@ const responseWriting = function(content, type, res) {
   res.end(content);
 };
 
-const serveGuestPage = function(req, res, next) {
-  const path = setPath(req);
-  const stat = fs.existsSync(path) && fs.statSync(path);
-  if (!stat || !stat.isFile()) {
-    return next();
-  }
-  const [, type] = req.url.split('.');
-  const chunk = parseChunk(req.body);
-  storeInputs(chunk);
-  const content = provideCommentPage(path);
-  responseWriting(content, type, res);
-};
-
-const servePreviousGuestBook = function(req, res, next) {
+const serveGuestBook = function(req, res, next) {
   const path = setPath(req);
   const stat = fs.existsSync(path) && fs.statSync(path);
   if (!stat || !stat.isFile()) {
@@ -120,8 +107,16 @@ const readBody = function(req, res, next) {
   });
 };
 
+const serveComments = function(req, res) {
+  const chunk = parseChunk(req.body);
+  storeInputs(chunk);
+  res.setHeader('location', '/guestBook.html');
+  res.writeHead(statusCodes.redirect);
+  res.end();
+};
+
 const notFound = function(req, res) {
-  res.writeHead(notFoundCode);
+  res.writeHead(statusCodes.notFound);
   res.end('Not Found');
 };
 
@@ -129,9 +124,9 @@ const app = new App();
 
 app.use(readBody);
 
-app.get('/guestBook.html', servePreviousGuestBook);
+app.get('/guestBook.html', serveGuestBook);
 app.get('', serveStaticPage);
-app.post('/guestBook.html', serveGuestPage);
+app.post('/comments', serveComments);
 app.get('', notFound);
 app.post('', notFound);
 

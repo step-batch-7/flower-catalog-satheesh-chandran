@@ -17,12 +17,9 @@ main();
 // } = require('./handlers');
 
 // const setPath = function(req) {
-//   let path = `${__dirname}/pages${req.url}`;
-//   if (path.includes('sources')) {
-//     path = `${__dirname}${req.url}`;
-//   }
+//   let path = `${__dirname}/public${req.url}`;
 //   if (req.method === 'GET' && req.url === '/') {
-//     path = `${__dirname}/pages/home.html`;
+//     path = `${__dirname}/public/home.html`;
 //   }
 //   return path;
 // };
@@ -35,6 +32,8 @@ main();
 //   if (req.method === 'GET' && path.includes('guestBook.html')) {
 //     return servePreviousGuestBook(path, req, res);
 //   }
+//   if (req.method === 'GET' && req.url === '/comments')
+//     return serveRedirection(path, req, res);
 //   serveStaticPage(path, req, res);
 // };
 

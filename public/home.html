@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel=“shortcut icon” href=“../sources/freshorigins.jpg” />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>flower-catalog</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script>
+      const hideImage = function() {
+        document.getElementById('imageBar').style.visibility = 'hidden';
+        setTimeout(() => {
+          document.getElementById('imageBar').style.visibility = 'visible';
+        }, 1000);
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Flower Catalog</h1>
+    <hr />
+    <br />
+    <div style="display: flex;">
+      <div style="height: 550px; width: 750px;">
+        <img src="./jpg/freshorigins.jpg" alt="" />
+      </div>
+      <div style="display: inline; margin: 5%;">
+        <div>
+          <li>
+            <a href="./abeliophyllum.html">Abeliophyllum</a>
+          </li>
+          <li>
+            <a href="./ageratum.html">Ageratum</a>
+          </li>
+        </div>
+        <div id="imageBar" style="height: 100px;width:100px">
+          <img
+            src="./gif/animated-flower-image-0021.gif"
+            style="height: 100px; width:100px;"
+            alt=""
+            onclick="hideImage()"
+          />
+        </div>
+        <div><a href="./guestBook.html">Guest Book</a></div>
+      </div>
+    </div>
+  </body>
+</html>

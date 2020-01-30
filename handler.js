@@ -4,12 +4,9 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const statusCodes = { notFound: 404, redirect: 301 };
 
 const setPath = function(req) {
-  let path = `${__dirname}/pages${req.url}`;
-  if (path.includes('sources')) {
-    path = `${__dirname}${req.url}`;
-  }
-  if (req.method === 'GET' && req.url === '/') {
-    path = `${__dirname}/pages/home.html`;
+  let path = `${__dirname}/public${req.url}`;
+  if (req.url === '/') {
+    path = `${__dirname}/public/home.html`;
   }
   return path;
 };
@@ -118,7 +115,7 @@ const serveComments = function(req, res) {
 const notFound = function(req, res) {
   const type = 'html';
   const content = fs.readFileSync(
-    '/Users/step13/html/flower-catalog-satheesh-chandran/pages/notFound.html'
+    '/Users/step13/html/flower-catalog-satheesh-chandran/public/notFound.html'
   );
   responseWriting(content, type, res);
 };

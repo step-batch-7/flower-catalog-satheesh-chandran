@@ -1,3 +1,19 @@
+// const { readFileSync, writeFileSync, statSync, existsSync } = require('fs');
+
+// const fileSystem = {
+//   readFileSync: readFileSync,
+//   writeFileSync: writeFileSync,
+//   statSync: statSync,
+//   existsSync: existsSync
+// };
+
+const matchRoute = function(route, req) {
+  if (route.method) {
+    return req.method === route.method && req.url.match(route.path);
+  }
+  return true;
+};
+
 class App {
   constructor() {
     this.routes = [];
@@ -29,12 +45,5 @@ class App {
     next();
   }
 }
-
-const matchRoute = function(route, req) {
-  if (route.method) {
-    return req.method === route.method && req.url.match(route.path);
-  }
-  return true;
-};
 
 module.exports = { App };

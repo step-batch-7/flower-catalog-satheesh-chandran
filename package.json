@@ -15,7 +15,7 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "export DATA_STORE=$(pwd)/test/comments.json; nyc mocha",
     "start": "node server.js"
   },
   "repository": {

@@ -69,17 +69,7 @@ describe('GET request for static files', function() {
 });
 
 describe('GET guestBook.html', function() {
-  // it('should give the guest book page for /guestBook.html', done => {
-  //   request(app.serve.bind(app))
-  //     .get('/guestBook.html')
-  //     .expect('Content-Type', 'text/html')
-  //     .expect(STATUS_CODES.OK, done);
-  // });
-  // before(() => {
-  //   fs.existsSync = sinon.fake.returns(false);
-  // });
-  before(() => sinon.replace(fs, 'existsSync', () => false));
-  it('should give the guest page if the json file is not existing', done => {
+  it('should give the guest book page for /guestBook.html', done => {
     request(app.serve.bind(app))
       .get('/guestBook.html')
       .expect('Content-Type', 'text/html')

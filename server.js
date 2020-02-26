@@ -1,19 +1,11 @@
-// const { readFileSync, writeFileSync, statSync, existsSync } = require('fs');
-const http = require('http');
+const { env } = process;
+
 const port = 8000;
-
-const { app } = require('./lib/handlers');
-
-// const fileSystem = {
-//   readFileSync: readFileSync,
-//   writeFileSync: writeFileSync,
-//   statSync: statSync,
-//   existsSync: existsSync
-// };
+const PORT = env.PORT || port;
+const { app } = require('./lib/routes');
 
 const main = function() {
-  const server = new http.Server(app.serve.bind(app));
-  server.listen(port);
+  app.listen(PORT, () => process.stdout.write(`Listening at ${PORT}`));
 };
 
 main();

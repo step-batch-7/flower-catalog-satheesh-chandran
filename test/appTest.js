@@ -7,11 +7,11 @@ const STATUS_CODES = {
   OK: 200,
   METHOD_NOT_FOUND: 400,
   REDIRECT: 301,
-  NOT_FOUND: 404
+  NOT_FOUND: 404,
 };
 
-describe('GET request for static files', function() {
-  it('should give the home page with url /', function(done) {
+describe('GET request for static files', function () {
+  it('should give the home page with url /', function (done) {
     request(app)
       .get('/')
       .expect('Content-Type', /html/)
@@ -19,7 +19,7 @@ describe('GET request for static files', function() {
       .expect(STATUS_CODES.OK, done);
   });
 
-  it('should give the home page with url /home.html', function(done) {
+  it('should give the home page with url /home.html', function (done) {
     request(app)
       .get('/home.html')
       .expect('Content-Type', /html/)
@@ -27,7 +27,7 @@ describe('GET request for static files', function() {
       .expect(STATUS_CODES.OK, done);
   });
 
-  it('should give the ageratum page with url /ageratum.html', function(done) {
+  it('should give the ageratum page with url /ageratum.html', function (done) {
     request(app)
       .get('/ageratum.html')
       .expect('Content-Type', /html/)
@@ -43,7 +43,7 @@ describe('GET request for static files', function() {
       .expect(STATUS_CODES.OK, done);
   });
 
-  it('should give the css content with url /css/styles.css', function(done) {
+  it('should give the css content with url /css/styles.css', function (done) {
     request(app)
       .get('/css/styles.css')
       .expect('Content-Type', /css/)
@@ -72,7 +72,7 @@ describe('GET request for static files', function() {
   });
 });
 
-describe('GET guestBook.html', function() {
+describe('GET guestBook.html', function () {
   it('should give the guest book page for /guestBook.html', done => {
     request(app)
       .get('/guestBook.html')
@@ -82,7 +82,7 @@ describe('GET guestBook.html', function() {
   after(() => sinon.restore());
 });
 
-describe('redirection for commnent POST', function() {
+describe('redirection for commnent POST', function () {
   before(() => sinon.replace(fs, 'writeFileSync', () => {}));
   it('should redirect to guest page for POST /comments', done => {
     request(app)
@@ -103,4 +103,4 @@ describe('Not Allowed Method', () => {
   });
 });
 
-describe('test of some function', function() {});
+// app.locals.db.close();

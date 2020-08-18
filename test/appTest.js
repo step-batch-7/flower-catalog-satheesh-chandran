@@ -72,28 +72,6 @@ describe('GET request for static files', function () {
   });
 });
 
-describe('GET guestBook.html', function () {
-  it('should give the guest book page for /guestBook.html', done => {
-    request(app)
-      .get('/guestBook.html')
-      .expect('Content-Type', 'text/html')
-      .expect(STATUS_CODES.OK, done);
-  });
-  after(() => sinon.restore());
-});
-
-describe('redirection for commnent POST', function () {
-  before(() => sinon.replace(fs, 'writeFileSync', () => {}));
-  it('should redirect to guest page for POST /comments', done => {
-    request(app)
-      .post('/comments')
-      .send('name=satheesh&comment=hai+satheesh')
-      .expect('Location', '/guestBook.html')
-      .expect(STATUS_CODES.REDIRECT, done);
-  });
-  after(() => sinon.restore());
-});
-
 describe('Not Allowed Method', () => {
   it('should give 400 status code when the method is not allowed', done => {
     request(app)
@@ -103,4 +81,3 @@ describe('Not Allowed Method', () => {
   });
 });
 
-// app.locals.db.close();
